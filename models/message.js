@@ -10,7 +10,7 @@ const MessageSchema=new Schema({
 })
 
 MessageSchema.virtual("get_date").get(function(){
-  return DateTime.fromJSDate(this.date).toLocaleString(DateTime.DATE_MED);
+  return DateTime.fromJSDate(this.date).toFormat("yyyy-MM-dd, HH:mm");
 })
 
 module.exports=mongoose.model("Message",MessageSchema);

@@ -1,5 +1,20 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 #[strong #{title}]
+  if(messages)
+    div.main_body
+      each msg in messages 
+        div.name
+          if(user)
+            p #{msg.user.name}
+          else 
+            p Anonymous 
+        div.text
+          p 
+            strong=`${msg.title}`
+          p #{msg.text}
+        div.time
+          p #{msg.get_date}
+  else 
+    p No Message Posted yet!!

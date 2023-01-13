@@ -1,0 +1,18 @@
+extend layout 
+block content 
+ h1 #[strong #{title}]
+
+ form.auth-form(method='POST' action='/log-in')
+  div.form 
+    label(for="user_name") Username: 
+    input#user_name(type='text' name='user_name' required='true' maxLength=10)
+  div.form
+    label(for="password") Password: 
+    input#password(type='password' name='password' required='true' minLength=5)
+
+  button.btn(type="submit") LogIn
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
