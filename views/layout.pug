@@ -4,4 +4,28 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    div.top_nav
+      nav.left_top_nav
+         Your Blogs
+      nav.right_top_nav
+        if (!user)
+          ul
+            a(href='/log-in')
+              li Log In 
+          ul 
+            a(href='/sign-up')
+              li Sign Up 
+        else 
+          ul 
+            a(href='/create-message')
+              li Create Message 
+          ul 
+            a(href='/member')
+              li Member 
+          ul 
+            a(href='/account')
+              li Account
+          ul 
+            a(href='/log-out')
+              li Log Out
     block content
