@@ -21,4 +21,9 @@ router.post('/log-in',authController.login_post);
 //logout route handler
 router.get('/log-out',authController.logout_get);
 
+
+//member
+router.get('/member',userController.member_get);
+router.post('/member',userController.member_post)
+
 module.exports = router;

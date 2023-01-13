@@ -38,7 +38,6 @@ app.use(compression()); // Compress all routes
 app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 passport.use(new LocalStrategy((username, password, done) => {
@@ -66,6 +65,7 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
 });
+app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,17 @@
+extends layout 
+
+block content 
+ if (!user.member)
+    form.auth-from(action='/member' method="POST")
+    h2=title 
+    div 
+      label(for="passcode") Enter the passcode: 
+      input#passcode(type="passcode" name="passcode" required="true")
+      button.btn(type="submit") Submit Passcode 
+
+    if(errors) 
+      p #{errors}
+  
+  else 
+    h1 Congrats You already are a member
+
