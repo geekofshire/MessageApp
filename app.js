@@ -1,30 +1,27 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+require("dotenv").config();
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("./models/user");
+const User = require("./models/userModel");
 const bcrypt = require("bcryptjs");
 const session = require("cookie-session"); // Dependency of passport.js
 const compression = require("compression"); // Decrease the size of the response body and hence increase the speed of a web app
 const helmet = require("helmet"); // Protects app from web vulnerabilities by setting HTTP headers appropriately
 
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
-
-
-// Set up mongoose connection
+// Establish database connection
 const mongoose = require("mongoose");
-const mongoDB = "mongodb+srv://rohan13:rohan7979@cluster0.lzqbtgd.mongodb.net/?retryWrites=true&w=majority";
+const pass="mongodb+srv://rohan13:rohan7979@cluster0.lzqbtgd.mongodb.net/?retryWrites=true&w=majority"
+const mongoDB = process.env.MONGODB_URI||pass;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
+// Import routes
+const indexRouter = require('./routes/routes');
+
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,8 +34,6 @@ app.use(cookieParser());
 app.use(compression()); // Compress all routes
 app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/users', usersRouter);
 
 passport.use(new LocalStrategy((username, password, done) => {
   User.findOne({ username: username }, (err, user) => {
@@ -56,15 +51,19 @@ passport.use(new LocalStrategy((username, password, done) => {
 
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser((id, done) => User.findById(id, (err, user) => done(err, user)));
+
+// Secret value should be a process env value
 app.use(session({ secret: "jojo", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 
+// Access the user object from anywhere in our application
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
 });
+
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

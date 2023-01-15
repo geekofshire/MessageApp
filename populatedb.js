@@ -1,13 +1,11 @@
-const async=require('async');
-const User=require('./models/user');
-const Message=require('./models/message');
+const async = require('async');
+const User = require("./models/userModel");
+const Message = require("./models/messageModel");
 
+// Get arguments passed on command line
 const userArgs = process.argv.slice(2);
 
 const mongoose = require("mongoose");
-const user = require('./models/user');
-
-
 const mongoDB = userArgs[0];
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
@@ -17,72 +15,68 @@ db.on("error", console.error.bind(console, "MongoDB connection error"));
 const users = [];
 const messages = [];
 
-function userCreate(first_name,last_name,user_id,password,is_member,is_admin,cb){
-  const user={
-    first_name:first_name,
-    last_name:last_name,
-    user_id:user_id,
-    password:password,
-    is_member:is_member,
-    is_admin:is_admin,
-  }
+function userCreate(username, password, member, admin, cb) {
+  userdetail = {
+    username: username,
+    password: password,
+    member: member,
+    admin: admin,
+  };
 
-  const new_user=new User(user);
+  // Create an instance of the User model
+  const user = new User(userdetail);
 
-  new_user.save((err)=>{
-    if(err) return cb(err,null);
-    console.log("User added");
-    users.push(new_user);
-    return cb(null,new_user);
-  })  
+  // Save the new model instance, passing a callback
+  user.save((err) => {
+    if (err) return cb(err, null);
+    console.log(`New User: ${user}`);
+    users.push(user);
+    return cb(null, user);
+  });
 }
 
-function messageCreate(user,title,text,cb){
-  const someMessage={
+function messageCreate(user,title, text, timestamp, cb) {
+  const someMessage = {
     user:user,
-    title:title,
-    text:text,
-    date:Date.now(),
-  }
+    title: title,
+    text: text,
+    timestamp: timestamp
+  };
 
-  const newMessage= new Message(someMessage);
-
-  newMessage.save((err)=>{
-    if(err) return cb(err,null);
-    console.log("Message added");
-    messages.push(newMessage);
-    return cb(null,newMessage)
-  })
+  const message = new Message(someMessage);
+  message.save((err) => {
+    if (err) return cb(err, null);
+    console.log(`New Message: ${message}`);
+    messages.push(message);
+    return cb(null, message);
+  });
 }
 
-
-function createUsers(cb){
+function createUsers(cb) {
   async.series([
-    function(callback){
-      userCreate("Rohan","Jha","rohan7979","rohan13",true,false,callback);
+    function(callback) {
+      userCreate("GiornoGiovanna", "K2Vw@PQvV-nMS_Rf", false, false, callback);
     },
-    function(callback){
-      userCreate("x","y","hh","zz",false,false,callback);
-    }
-  ],
-  cb);
+    function(callback) {
+      userCreate("GuidoMista", "@4JFDq*-u^5uy!", false, false, callback);
+    },
+  ], cb);
 }
 
-function createMessage(cb){
+function createMessages(cb) {
   async.series([
-    function(callback){
-      messageCreate(users[0],"hey","how are you?",callback)
+    function(callback) {
+      messageCreate(users[0],"My name is Giorno Giovanna", "I have a dream!", Date.now(), callback);
     },
-    function(callback){
-      messageCreate(users[1],"hiya","welcome to my house!!",callback)
-    }
-  ],
-  cb);  
+    function(callback) {
+      messageCreate(users[1],"I'm Guido Mista", "Numbaaa 5!!", Date.now(), callback);
+    },
+  ], cb);
 }
 
 async.series([
   createUsers,
-  createMessage,
+  createMessages,
 ], (err, results) => {
   if (err) { 
     console.log(`FINAL ERR: ${err}`);

@@ -1,18 +1,19 @@
-extend layout 
-block content 
- h1 #[strong #{title}]
+extends layout
 
- form.auth-form(method='POST' action='/log-in')
-  div.form 
-    label(for="user_name") Username: 
-    input#user_name(type='text' name='user_name' required='true' maxLength=10)
-  div.form
-    label(for="password") Password: 
-    input#password(type='password' name='password' required='true' minLength=5)
+block content
+  form.auth-form(action="/log-in" method="POST")
+    img.sign-up-img(src="../images/jojo-log-in.png", alt="")
+    h1= title
+    p.auth-alternative Don't have an account? 
+      a(href="sign-up") Sign up
+    div
+      label(for="username") Username: 
+      input#username(type="text" name="username" required="true")
 
-  button.btn(type="submit") LogIn
+    div
+      label(for="password") Password: 
+      input#password(type="password" name="password" required="true")
+    button(type="submit") Login
 
-  if errors
-    ul
-      for error in errors
-        li!= error.msg
+  if (errors)
+    p #{errors}

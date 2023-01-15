@@ -1,20 +1,87 @@
 extends layout
 
 block content
-  h1 #[strong #{title}]
-  if(messages)
-    div.main_body
-      each msg in messages 
-        div.name
-          if(user)
-            p #{msg.user.name}
-          else 
-            p Anonymous 
-        div.text
-          p 
-            strong=`${msg.title}`
-          p #{msg.text}
-        div.time
-          p #{msg.get_date}
-  else 
-    p No Message Posted yet!!
+  if (messages)
+    div.messages-container
+      if (!user || !user.member)
+        div.msg-container
+          div.msg-container-inner-left
+            div.msg-container-inner-avatar.speedwagon
+          div.msg-container-inner-right
+            h4.msg-title Hello, world!
+            p.msg-text To see additional information, register an account and log in, then use the passcode "harry" to become a member of The Message Club!
+            div.msg-info
+              div.avatar-icon.speedwagon
+              p Posted by 
+                span.msg-username Rohan
+              p.msg-date 1777-04-04
+      each message in messages
+        div.msg-container
+          div.msg-container-inner-left
+            if (!user || !user.member) 
+              div.msg-container-inner-avatar.giorno-anon
+            else 
+              if (user && user.member)
+                if (message.user.avatar==="jonathan")
+                  div.msg-container-inner-avatar.jonathan
+                if (message.user.avatar==="joseph")
+                  div.msg-container-inner-avatar.joseph
+                if (message.user.avatar==="jotaro")
+                  div.msg-container-inner-avatar.jotaro
+                if (message.user.avatar==="josuke")
+                  div.msg-container-inner-avatar.josuke
+                if (message.user.avatar==="giorno")
+                  div.msg-container-inner-avatar.giorno
+                if (message.user.avatar==="jolyne")
+                  div.msg-container-inner-avatar.jolyne
+          div.msg-container-inner-right
+            //- Render usernames of messages only if the user is logged in and is a member
+            if (user && user.member)
+              h4.msg-title= message.title
+              p.msg-text= message.text
+              div.msg-info
+                if (user && user.member)
+                  if (message.user.avatar==="jonathan")
+                    div.avatar-icon.jonathan
+                  if (message.user.avatar==="joseph")
+                    div.avatar-icon.joseph
+                  if (message.user.avatar==="jotaro")
+                    div.avatar-icon.jotaro
+                  if (message.user.avatar==="josuke")
+                    div.avatar-icon.josuke
+                  if (message.user.avatar==="giorno")
+                    div.avatar-icon.giorno
+                  if (message.user.avatar==="jolyne")
+                    div.avatar-icon.jolyne
+                p Posted by 
+                  span.msg-username #{message.user.username}
+                p.msg-date= message.date
+            else
+              h4.msg-title= message.title
+              p.msg-text= message.text
+              div.msg-info
+                if (user && user.member)
+                  if (message.user.avatar==="jonathan")
+                    div.avatar-icon.jonathan
+                  if (message.user.avatar==="joseph")
+                    div.avatar-icon.joseph
+                  if (message.user.avatar==="jotaro")
+                    div.avatar-icon.jotaro
+                  if (message.user.avatar==="josuke")
+                    div.avatar-icon.josuke
+                  if (message.user.avatar==="giorno")
+                    div.avatar-icon.giorno
+                  if (message.user.avatar==="jolyne")
+                    div.avatar-icon.jolyne
+                else
+                  div.avatar-icon.giorno-anon
+                p Posted by 
+                  span.msg-username Anonymous
+                p Date: N/A
+            if (user && user.admin)
+              div.delete-msg
+                form(action="" method="POST")
+                  input#messageId(type="hidden", name="messageId", required="true", value=message._id)
+                  button(type="submit") Delete
+
+          //- img(src="../images/giorno-anon.png", alt="", style="width: 100px; border-radius: 100%;")

@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('messageapp:server');
+var debug = require('debug')('members-only:server');
 var http = require('http');
 
 /**

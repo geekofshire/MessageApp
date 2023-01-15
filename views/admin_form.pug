@@ -1,0 +1,22 @@
+extends layout
+
+block content
+
+  if (!user.admin)  
+    form.auth-form(action="/admin" method="POST")
+      h2= title
+      div
+        label(for="passcode") Enter the Admin Passcode: 
+        input#passcode(type="password" name="passcode" required="true")
+        if (passcodeError)
+          p(style="color: red") #{passcodeError}
+      button(type="submit") Submit Passcode
+
+
+    if (errors)
+      p #{errors}
+
+  else
+    div(style="width: 50%; margin: 0 auto; text-align: center")
+      h2 You are already an admin!
+      img(src="../images/admin.png", alt="", style="height: 150px; margin-top: 2em;")

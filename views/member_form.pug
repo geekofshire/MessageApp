@@ -1,17 +1,22 @@
-extends layout 
+extends layout
 
-block content 
- if (!user.member)
-    form.auth-from(action='/member' method="POST")
-    h2=title 
-    div 
-      label(for="passcode") Enter the passcode: 
-      input#passcode(type="passcode" name="passcode" required="true")
-      button.btn(type="submit") Submit Passcode 
+block content
 
-    if(errors) 
+  if (!user.member)  
+    form.auth-form(action="/member" method="POST")
+      h2= title
+      div
+        label(for="passcode") Enter the Member Passcode: 
+        input#passcode(type="password" name="passcode" required="true")
+        if (passcodeError)
+          p(style="color: red") #{passcodeError}
+      button(type="submit") Submit Passcode
+
+    if (errors)
       p #{errors}
-  
-  else 
-    h1 Congrats You already are a member
 
+  else
+    div(style="width: auto; margin: 0 auto; text-align: center")
+      h2 Congrats! You're a member!
+      a(href="/")
+        img.jojo-world(src="../images/jojo-world.jpeg", alt="")
